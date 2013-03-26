@@ -12,7 +12,7 @@ Fuck My Dom messes up the structure of the document by randomly rearanging eleme
 	} else {
 		FuckMyDom.slowly(\);
 	}
-}( window \)\));
+}( window \)\);)
 
 ## Example
 

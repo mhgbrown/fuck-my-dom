@@ -81,11 +81,16 @@
      * @param {Integer} timeout The number of milliseconds to wait between each rearrangement.
      **/
     slowly: function( iterations, timeout ) {
-      var times = iterations || this.getAllElements().length,
-        wait = timeout || this.DEFAULT_TIMEOUT,
-        self = this;
+      var wait = timeout || this.DEFAULT_TIMEOUT,
+        self = this,
+        times;
 
-        console.log(times);
+      if( iterations === 0 ) {
+        times = 0;
+      } else {
+        times = iterations || this.getAllElements().length;
+      }
+
       if( times === 0 ) {
         return;
       } else {
