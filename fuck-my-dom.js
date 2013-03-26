@@ -85,12 +85,13 @@
         wait = timeout || this.DEFAULT_TIMEOUT,
         self = this;
 
+        console.log(times);
       if( times === 0 ) {
         return;
       } else {
         this.once();
         setTimeout(function() {
-          self.slowly( times--, wait );
+          self.slowly( --times, wait );
         }, wait);
       }
     }

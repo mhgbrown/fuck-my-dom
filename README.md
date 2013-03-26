@@ -2,14 +2,17 @@
 
 Fuck My Dom messes up the structure of the document by randomly rearanging elements.
 
-[Try it]()
-
-[Bookmarklet](javascript:(function(\) {
-	var stag = document.createElement( 'script' \);
-	stag.setAttribute( 'src', 'https://raw.github.com/discom4rt/fuck-my-dom/master/fuck-my-dom.js' \);
-	stag.setAttribute( 'async' \);
-	document.body.appendChild( stag \);
-}(\)\))
+[Try it/Bookmark it](javascript:(function( window \) {
+	var stag;
+	if( !window.FuckMyDom \) {
+		stag = document.createElement( 'script' \);
+		stag.setAttribute( 'src', 'https://raw.github.com/discom4rt/fuck-my-dom/master/fuck-my-dom.js' \);
+		stag.onload = function(\){ FuckMyDom.slowly(\); };
+		document.body.appendChild( stag \);
+	} else {
+		FuckMyDom.slowly(\);
+	}
+}( window \)\));
 
 ## Example
 
