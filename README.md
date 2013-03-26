@@ -2,6 +2,15 @@
 
 Fuck My Dom messes up the structure of the document by randomly rearanging elements.
 
+[Try it]()
+
+[Bookmarklet](javascript:(function(\) {
+	var stag = document.createElement( 'script' \);
+	stag.setAttribute( 'src', 'https://raw.github.com/discom4rt/fuck-my-dom/master/fuck-my-dom.js' \);
+	stag.setAttribute( 'async' \);
+	document.body.appendChild( stag \);
+}(\)\))
+
 ## Example
 
 	/**
@@ -19,8 +28,6 @@ Randomly rearrange all the elements on the page.
 
 .up( [iterations] )
 
-#### Parameters
-
 ```iterations``` The number of rearrangements to perform.
 
 ### slowly
@@ -30,12 +37,12 @@ before each rearrangement
 
 .slowly( [iterations], [timeout] )
 
-#### Parameters
-
 ```iterations``` The number of rearrangements to perform.
 
 ```timeout``` The number of milleseconds to wait between each rearragement.
 
 ### once
+
+Randomly rearrange one element on the page.
 
 .once()

@@ -24,11 +24,11 @@
      * @return {HTMLCollection} The collection of all elements in the document.
      **/
     getAllElements: function( reload ) {
-      if( reload || !cache[ ALL_ELEMENTS_CACHE_KEY ] ) {
-        cache[ ALL_ELEMENTS_CACHE_KEY ] = document.getElementsByTagName( '*' );
+      if( reload || !this.cache[ this.ALL_ELEMENTS_CACHE_KEY ] ) {
+        this.cache[ this.ALL_ELEMENTS_CACHE_KEY ] = document.getElementsByTagName( '*' );
       }
 
-      return cache[ ALL_ELEMENTS_CACHE_KEY ];
+      return this.cache[ this.ALL_ELEMENTS_CACHE_KEY ];
     },
 
     /**
@@ -82,7 +82,7 @@
      **/
     slowly: function( iterations, timeout ) {
       var times = iterations || this.getAllElements().length,
-        wait = timeout || DEFAULT_TIMEOUT,
+        wait = timeout || this.DEFAULT_TIMEOUT,
         self = this;
 
       if( iterations === 0 ) {
