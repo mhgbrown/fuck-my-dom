@@ -85,12 +85,12 @@
         wait = timeout || this.DEFAULT_TIMEOUT,
         self = this;
 
-      if( iterations === 0 ) {
+      if( times === 0 ) {
         return;
       } else {
         this.once();
         setTimeout(function() {
-          self.slowly( iterations--, wait );
+          self.slowly( times--, wait );
         }, wait);
       }
     }
