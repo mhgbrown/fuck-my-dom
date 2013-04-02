@@ -3,103 +3,153 @@
   /**
    * Fuck My Dom messes up the structure of the document by randomly rearanging elements.
    *
-   * @version 1.0.0
+   * @version 2.0.0
    **/
-  window.FuckMyDom = {
+  var FuckMyDom = function() {
 
-    /* {String} The cache key to retrieve all elements */
-    ALL_ELEMENTS_CACHE_KEY: 'ae',
+        /* {Integer} The default number of milliseconds to wait between each rearrangement */
+    var DEFAULT_TIMEOUT                   = 50,
 
-    /* {Integer} The default number of milliseconds to between   */
-    DEFAULT_TIMEOUT: 100,
+        /* {Integer} The default number of times to rearrange the DOM */   
+        DEFAULT_ITERATIONS                = 350,
 
-    /* {Object} Stores temporary support data */
-    cache: {},
+        /* {String} The selector string representing elements that can have children appended to them */   
+        DEFAULT_PARENTABLE                = '*:not(script):not(head)',
+
+        /* {String} The selector string representing elements that cannot become children */ 
+        DEFAULT_CHILDABLE                 = '*:not(body)',
+
+        /* {Object} Select defaults for each method */
+        DEFAULTS                          = {     
+          timeout: DEFAULT_TIMEOUT,
+          iterations: DEFAULT_TIMEOUT,
+          parentable: DEFAULT_PARENTABLE,
+          childable: DEFAULT_CHILDABLE
+        },
+
+        /* {Object} Stores temporary support data */
+        cache                             = {};   
 
     /**
-     * Retrieve and cache a collection of all the elements on the page.
+     * Extend a given object with all the properties in passed-in object(s).
      *
-     * @param {Boolean} reload If the cache of all elements should be reloaded
-     *  from the page.
-     * @return {HTMLCollection} The collection of all elements in the document.
+     * @param {Object} obj The object whose properties will be overridden
+     * @return {Object} The merged object
      **/
-    getAllElements: function( reload ) {
-      if( reload || !this.cache[ this.ALL_ELEMENTS_CACHE_KEY ] ) {
-        this.cache[ this.ALL_ELEMENTS_CACHE_KEY ] = document.getElementsByTagName( '*' );
+    function merge( obj ) {
+      var args = Array.prototype.slice.call( arguments, 1 ),
+        len = args.length,
+        i;
+
+      for( i = 0; i < len; i++ ) {
+        var mergee = args[ i ];
+
+        if ( mergee ) {
+          for (var prop in mergee) {
+            obj[ prop ] = mergee[ prop ];
+          }
+        }
       }
 
-      return this.cache[ this.ALL_ELEMENTS_CACHE_KEY ];
-    },
+      return obj;
+    }
+
+    /**
+     * Retrieve and cache a collection of the elements specified by the given 
+     * selector.
+     *
+     * @param {String} selector If the cache of all elements should be reloaded
+     *  from the page.
+     * @param {Boolean} reload If the cache of all elements should be reloaded
+     *  from the page.
+     * @return {NodeList} The collection of all elements in the document.
+     **/
+     function getElements( selector, reload ) {
+      if( reload || !cache[ selector ] ) {
+        cache[ selector ] = document.querySelectorAll( selector );
+      }
+
+      return cache[ selector ];
+    }
 
     /**
      * Retrieve a random element from the document.
      *
      * @return {HTMLElement} The randomly retireved element.
      **/
-    getRandomElement: function() {
-      var allElements = this.getAllElements(),
-        randomIndex = Math.ceil( Math.random() * allElements.length );
+    function getRandomElement( selector ) {
+      var matchedElements = getElements( selector ),
+        randomIndex = Math.ceil( Math.random() * matchedElements.length );
 
-      return allElements[ randomIndex ];
-    },
+      return matchedElements[ randomIndex ];
+    }
 
     /**
      * Choose two random elements and make the first a child of the second.
+     *
+     * @param {Object} options {
+     *  parentable: A selector string representing elements that can have children appended to them
+     *  childable: A selector string representing elements that cannot become children
+     * }
      **/
-    once: function() {
-      var randomElement1 = this.getRandomElement(),
-        randomElement2 = this.getRandomElement();
+    this.once = function( options ) {
+      var options = merge( {}, DEFAULTS, options ),
+        randomElement1 = getRandomElement( options.childable ),
+        randomElement2 = getRandomElement( options.parentable );
 
       try {
         randomElement2.appendChild( randomElement1 );
         // if we get some sort of exception, try again. Seems dangerous.
       } catch ( exception ) {
-        this.once();
+        this.once( options );
       }
-    },
+    };
 
     /**
      * Choose two random elements and make the first a child of the second for
      * iterations or the total number of elements in the document times.
      *
-     * @param {Integer} iterations The number of times to rearrange DOM elements
+     * @param {Object} options {
+     *  iterations: The number of times the DOM should be rearranged
+     *  parentable: A selector string representing elements that can have children appended to them
+     *  childable: A selector string representing elements that cannot become children
+     * }
      **/
-    up: function( iterations ) {
-      var times = iterations || this.getAllElements().length;
+    this.up = function( options ) {
+      var options = merge( {}, DEFAULTS, options );
 
-      while( times-- ) {
-        this.once();
+      while( options.iterations-- ) {
+        this.once( options );
       }
-    },
+    };
 
     /**
      * Choose two random elements and make the first a child of the second for
      * iterations or the total number of elements in the document times, waiting
      * timeout milliseconds between each rearrangement.
      *
-     * @param {Integer} iterations The number of times to rearrange DOM elements.
-     * @param {Integer} timeout The number of milliseconds to wait between each rearrangement.
+     * @param {Object} options {
+     *  iterations: The number of times the DOM should be rearranged
+     *  timeout: The number of milliseconds to wait between each rearrangement
+     *  parentable: A selector string representing elements that can have children appended to them
+     *  childable: A selector string representing elements that cannot become children
+     * }
      **/
-    slowly: function( iterations, timeout ) {
-      var wait = timeout || this.DEFAULT_TIMEOUT,
-        self = this,
-        times;
+    this.slowly = function( options ) {
+      var options = merge( {}, DEFAULTS, options ),
+        self = this;
 
-      if( iterations === 0 ) {
-        times = 0;
-      } else {
-        times = iterations || this.getAllElements().length;
-      }
+      (function upWithTimeout() {
+        if( options.iterations !== 0 ) {
+          self.once( options );
+          options.iterations--;
+          setTimeout( upWithTimeout, options.timeout );
+        }
+      }());
+    };
 
-      if( times === 0 ) {
-        return;
-      } else {
-        this.once();
-        setTimeout(function() {
-          self.slowly( --times, wait );
-        }, wait);
-      }
-    }
   };
+
+  window.FuckMyDom = new FuckMyDom();
 
 }( window, document ));
