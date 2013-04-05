@@ -3,7 +3,7 @@
   /**
    * Fuck My Dom messes up the structure of the document by randomly rearanging elements.
    *
-   * @version 2.0.0
+   * @version 2.0.1
    **/
   var FuckMyDom = function() {
 
@@ -14,7 +14,7 @@
         DEFAULT_ITERATIONS                = 350,
 
         /* {String} The selector string representing elements that can have children appended to them */   
-        DEFAULT_PARENTABLE                = '*:not(script):not(head)',
+        DEFAULT_PARENTABLE                = '*:not(link, script, head, meta, input, textarea, select, img, :hidden)',
 
         /* {String} The selector string representing elements that cannot become children */ 
         DEFAULT_CHILDABLE                 = '*:not(body)',
