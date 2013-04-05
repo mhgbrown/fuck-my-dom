@@ -14,7 +14,7 @@
         DEFAULT_ITERATIONS                = 350,
 
         /* {String} The selector string representing elements that can have children appended to them */   
-        DEFAULT_PARENTABLE                = '*:not(link, script, head, meta, input, textarea, select, img, :hidden)',
+        DEFAULT_PARENTABLE                = '*:not(link):not(script):not(head):not(meta):not(input):not(textarea):not(select):not(img)',
 
         /* {String} The selector string representing elements that cannot become children */ 
         DEFAULT_CHILDABLE                 = '*:not(body)',
