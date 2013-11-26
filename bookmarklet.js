@@ -1,7 +1,7 @@
 /**
  * Download FuckMyDom and call slowly()
  **/
-(function( window ) {
+(function( window, document, undefined ) {
 
   var stag;
 
@@ -14,4 +14,4 @@
     FuckMyDom.slowly();
   }
 
-}( window ));
+}( window, document ));
