@@ -7,7 +7,7 @@
 
   if( !window.FuckMyDom ) {
     stag = document.createElement( 'script' );
-    stag.setAttribute( 'src', 'http://mhgbrown.github.io/fuck-my-dom/fuck-my-dom.js' );
+    stag.setAttribute( 'src', 'https://mhgbrown.github.io/fuck-my-dom/fuck-my-dom.js' );
     stag.onload = function(){ FuckMyDom.slowly(); };
     document.body.appendChild( stag );
   } else {
